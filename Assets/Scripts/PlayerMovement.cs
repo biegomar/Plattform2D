@@ -9,37 +9,57 @@ public class PlayerMovement : MonoBehaviour
     private int Speed;
 
     [SerializeField]
-    private int JumpAcceleration;
+    private float Velocity;
+
+    [SerializeField]
+    private int NumberOfJumps;
+
+    private int NumberOfJumpsUsed;
+
+    private Rigidbody2D rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.NumberOfJumpsUsed = 0;
+        this.rigidbody = GetComponent<Rigidbody2D>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        var oldPosition = transform.position;
-        var movementX = Input.GetAxisRaw("Horizontal");
-        var jump = Input.GetAxisRaw("Vertical");
-
-
-        oldPosition.x = Math.Min(8.28f, Math.Max(-8.25f, oldPosition.x + CalculateNewXPosition(movementX)));
-        //oldPosition.x += CalculateNewXPosition(movementX);
-        oldPosition.y += CalculateJump(jump);
-
-        transform.position = oldPosition;
+        this.Jump();
+        this.MoveHorizontal();              
     }
 
-    private float CalculateNewXPosition(float movementX)
+    private void MoveHorizontal()
     {
-        return movementX * this.Speed * Time.deltaTime;
+        transform.position = new Vector3(
+            CalculateNewXPosition(), 
+            transform.position.y, 
+            transform.position.z);
     }
 
-    private float CalculateJump(float jump)
+    private float CalculateNewXPosition()
+    {        
+        return Math.Min(8.28f, Math.Max(-8.25f, transform.position.x + Input.GetAxis("Horizontal") * this.Speed * Time.deltaTime));
+    }
+
+    private void Jump()
     {
-        return Math.Max(0, jump * this.JumpAcceleration * Time.deltaTime);
-        //return jump * this.JumpAcceleration * Time.deltaTime;
+
+        //if (Input.GetAxis("Vertical") * Time.deltaTime  > 0)        
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (this.NumberOfJumpsUsed < NumberOfJumps)
+            {
+                this.NumberOfJumpsUsed++;
+                this.rigidbody.AddForce(Vector2.up * Math.Min(NumberOfJumps * Velocity, Velocity), ForceMode2D.Impulse);
+
+            }
+            else if (this.rigidbody.velocity.y == 0)
+            {
+                this.NumberOfJumpsUsed = 0;
+            }
+        }                        
     }
 }
