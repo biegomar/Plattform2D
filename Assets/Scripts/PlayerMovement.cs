@@ -14,16 +14,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private int NumberOfJumps;
 
-    private int NumberOfJumpsUsed;
+    private int NumberOfJumpsUsed;   
+    private bool ShouldJumpAfterTouchDown;
 
     private Rigidbody2D Rigidbody;
 
-    private bool shouldJumpAfterTouchDown;
-
-    // Start is called before the first frame update
     void Start()
     {
-        this.shouldJumpAfterTouchDown = false;
+        this.ShouldJumpAfterTouchDown = false;
         this.NumberOfJumpsUsed = 0;
         this.Rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -48,9 +46,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Jump()
-    {
-
-        //if (Input.GetAxis("Vertical") * Time.deltaTime  > 0)        
+    {          
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (this.NumberOfJumpsUsed < NumberOfJumps)
@@ -63,13 +59,13 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                this.shouldJumpAfterTouchDown = true;         
+                this.ShouldJumpAfterTouchDown = true;         
             }
         }
-        else if (this.Rigidbody.velocity.y == 0 && this.shouldJumpAfterTouchDown)
+        else if (this.Rigidbody.velocity.y == 0 && this.ShouldJumpAfterTouchDown)
         {            
             this.JumpNow();
-            this.shouldJumpAfterTouchDown = false;
+            this.ShouldJumpAfterTouchDown = false;
         }       
     }
 
