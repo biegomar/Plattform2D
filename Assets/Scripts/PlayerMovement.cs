@@ -16,13 +16,13 @@ public class PlayerMovement : MonoBehaviour
 
     private int NumberOfJumpsUsed;
 
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D Rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
         this.NumberOfJumpsUsed = 0;
-        this.rigidbody = GetComponent<Rigidbody2D>();
+        this.Rigidbody = GetComponent<Rigidbody2D>();
     }
     
     void Update()
@@ -40,8 +40,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private float CalculateNewXPosition()
-    {        
-        return Math.Min(8.28f, Math.Max(-8.25f, transform.position.x + Input.GetAxis("Horizontal") * this.Speed * Time.deltaTime));
+    {
+        return Math.Min(8.28f, Math.Max(-8.25f, transform.position.x + Input.GetAxis("Horizontal") * this.Speed * Time.deltaTime));        
     }
 
     private void Jump()
@@ -53,10 +53,10 @@ public class PlayerMovement : MonoBehaviour
             if (this.NumberOfJumpsUsed < NumberOfJumps)
             {
                 this.NumberOfJumpsUsed++;
-                this.rigidbody.AddForce(Vector2.up * Math.Min(NumberOfJumps * Velocity, Velocity), ForceMode2D.Impulse);
+                this.Rigidbody.AddForce(Vector2.up * Math.Min(NumberOfJumps * Velocity, Velocity), ForceMode2D.Impulse);
 
             }
-            else if (this.rigidbody.velocity.y == 0)
+            else if (this.Rigidbody.velocity.y == 0)
             {
                 this.NumberOfJumpsUsed = 0;
             }
