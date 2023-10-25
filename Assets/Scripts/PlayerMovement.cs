@@ -18,9 +18,12 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D Rigidbody;
 
+    private bool shouldJumpAfterTouchDown;
+
     // Start is called before the first frame update
     void Start()
     {
+        this.shouldJumpAfterTouchDown = false;
         this.NumberOfJumpsUsed = 0;
         this.Rigidbody = GetComponent<Rigidbody2D>();
     }
@@ -52,14 +55,27 @@ public class PlayerMovement : MonoBehaviour
         {
             if (this.NumberOfJumpsUsed < NumberOfJumps)
             {
-                this.NumberOfJumpsUsed++;
-                this.Rigidbody.AddForce(Vector2.up * Math.Min(NumberOfJumps * Velocity, Velocity), ForceMode2D.Impulse);
-
+                this.JumpNow();
             }
             else if (this.Rigidbody.velocity.y == 0)
             {
                 this.NumberOfJumpsUsed = 0;
             }
-        }                        
+            else
+            {
+                this.shouldJumpAfterTouchDown = true;         
+            }
+        }
+        else if (this.Rigidbody.velocity.y == 0 && this.shouldJumpAfterTouchDown)
+        {            
+            this.JumpNow();
+            this.shouldJumpAfterTouchDown = false;
+        }       
+    }
+
+    private void JumpNow()
+    {
+        this.NumberOfJumpsUsed++;
+        this.Rigidbody.AddForce(Vector2.up * Math.Min(NumberOfJumps * Velocity, Velocity), ForceMode2D.Impulse);
     }
 }
