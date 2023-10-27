@@ -19,48 +19,49 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D Rigidbody;
 
-    void Start()
+    private void Awake()
     {
         this.ShouldJumpAfterTouchDown = false;
         this.NumberOfJumpsUsed = 0;
         this.Rigidbody = GetComponent<Rigidbody2D>();
-    }
+    }    
     
     void Update()
     {
         this.Jump();
-        this.MoveHorizontal();              
+        this.MoveHorizontal();
     }
 
     private void MoveHorizontal()
     {
         transform.position = new Vector3(
-            CalculateNewXPosition(), 
-            transform.position.y, 
+            CalculateNewXPosition(),
+            transform.position.y,
             transform.position.z);
     }
 
     private float CalculateNewXPosition()
-    {
-        return Math.Min(8.28f, Math.Max(-8.25f, transform.position.x + Input.GetAxis("Horizontal") * this.Speed * Time.deltaTime));        
+    {        
+        return transform.position.x + Input.GetAxis("Horizontal") * this.Speed * Time.deltaTime;
     }
 
     private void Jump()
-    {          
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+    {
+        if (this.Rigidbody.velocity.y == 0)
         {
+            this.NumberOfJumpsUsed = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {                        
             if (this.NumberOfJumpsUsed < NumberOfJumps)
             {
                 this.JumpNow();
-            }
-            else if (this.Rigidbody.velocity.y == 0)
-            {
-                this.NumberOfJumpsUsed = 0;
-            }
+            }            
             else
             {
                 this.ShouldJumpAfterTouchDown = true;         
-            }
+            }            
         }
         else if (this.Rigidbody.velocity.y == 0 && this.ShouldJumpAfterTouchDown)
         {            
